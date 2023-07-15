@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 5e6ca96139c34be409d1b3ee7c5b8455
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - DeathParticles: {fileID: 7850547842244161490, guid: 9fbe6d304a5343e4da050cb3cc210985,
+      type: 3}
+  - Confetti: {fileID: 3823533500459442661, guid: d6c41353b4f64f341b0a7f54b0858d8a,
+      type: 3}
+  - Perfab_Dimmer: {fileID: 4445713319643384532, guid: 1979c6949b2af30418348ea4be3798f4,
+      type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
