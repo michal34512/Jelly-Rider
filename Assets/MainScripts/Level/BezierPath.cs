@@ -7,10 +7,11 @@ using UnityEngine.UI;
 
 [RequireComponent(typeof(PolygonCollider2D))]
 [RequireComponent(typeof(LineRenderer))]
-[RequireComponent(typeof(MeshFilter))]
-[RequireComponent(typeof(MeshRenderer))]
+//[RequireComponent(typeof(MeshFilter))]
+//[RequireComponent(typeof(MeshRenderer))]
 public class BezierPath : MonoBehaviour
 {
+    public bool DynamicShadow = false; 
     public Vector2 firstPoint;
     public Vector2 secondPoint;
 
@@ -19,11 +20,14 @@ public class BezierPath : MonoBehaviour
 
     public int pointsQuantity;
     public float ColliderOffset = 0;
+
+    public Material ShadowMaterial;
     //Mesh Information
     [SerializeField, HideInInspector]
     public Vector3[] verticles;
     [SerializeField, HideInInspector]
     public int[] triangles;
+    GameObject ShadowGameObject;
     Mesh ShadowMesh;
     //private 
 
@@ -83,34 +87,71 @@ public class BezierPath : MonoBehaviour
         ShadowMesh.triangles = triangles;
         //ShadowMesh.uv = System.Array.ConvertAll(verticles, Conventer);
         ShadowMesh.RecalculateNormals();
-        GetComponent<MeshFilter>().mesh = ShadowMesh;
-        
+        if (DynamicShadow)
+        {
+            ShadowGameObject = new GameObject();
+            //ShadowGameObject.transform.parent = transform.parent;
+            ShadowGameObject.AddComponent<MeshFilter>().mesh = ShadowMesh;
+            ShadowGameObject.AddComponent<MeshRenderer>().material = ShadowMaterial;
+        }
+        else
+        {
+            if(GetComponent<MeshFilter>()==null)
+                gameObject.AddComponent<MeshFilter>().mesh = ShadowMesh;
+            else GetComponent<MeshFilter>().mesh = ShadowMesh;
+            if (GetComponent<MeshRenderer>() == null)
+                gameObject.AddComponent<MeshRenderer>().material = ShadowMaterial;
+        }
+            
     }
     Vector3 ToBottomScreen(Vector3 PointPosition)
     {
-        Vector2 FixedLight = (Vector2)ShadowLight.Instance.transform.position - (Vector2)transform.position;
-        float ScreenBottom = Camera.main.transform.position.y - Camera.main.orthographicSize - 1f - transform.position.y;
+        Vector2 FixedLight = (Vector2)ShadowLight.Instance.transform.position;
+        float ScreenBottom = Camera.main.transform.position.y - Camera.main.orthographicSize - 1f;
+        if (!DynamicShadow) { FixedLight -= (Vector2)transform.position; ScreenBottom -= transform.position.y; } 
         Vector2 Direction = ((Vector2)PointPosition - FixedLight).normalized;
         Vector2 Rezult = FixedLight + Direction * (ScreenBottom - FixedLight.y) / Direction.y;
         return new Vector3(Rezult.x, Rezult.y, PointPosition.z);
     }
+    Vector3 GetVerticlePosition(int index, float ZPos)
+    {
+        Vector2 rezult = (transform.rotation * GetComponent<PolygonCollider2D>().points[index]) + transform.position;
+        return new Vector3(rezult.x, rezult.y, ZPos);
+    }
     private void UpdateShadows()
     {
+        
         int HalfShadowVerticles = (int)(verticles.Length * 0.5f);
+        if (DynamicShadow)
+            for (int i = 0; i < HalfShadowVerticles; i++)
+            {
+                verticles[i] = GetVerticlePosition(i, verticles[i].z);
+            }
         for (int i = 0; i < HalfShadowVerticles; i++)
         {
             verticles[i + HalfShadowVerticles] = ToBottomScreen(verticles[i]);
         }
-        if(ShadowMesh==null)
+        if (ShadowMesh==null)
             ShadowMesh = new Mesh();
         ShadowMesh.vertices = verticles;
         ShadowMesh.triangles = triangles;
         ShadowMesh.RecalculateBounds();
-        GetComponent<MeshFilter>().mesh = ShadowMesh;
+        if (ShadowGameObject != null)
+        {
+            ShadowGameObject.GetComponent<MeshFilter>().mesh = ShadowMesh;
+            ShadowGameObject.GetComponent<MeshRenderer>().material = ShadowMaterial;
+        }
+        else
+            GetComponent<MeshFilter>().mesh = ShadowMesh;
     }
     private void LookForUdpateShadows()
     {
-        if (ShadowLight.Instance.isCameraMoved)
+        if(DynamicShadow)
+        {
+            UpdateShadows();
+            return;
+        }
+        else if (ShadowLight.Instance.isCameraMoved)
         {
             float LewyKraniec()
             {
@@ -123,7 +164,10 @@ public class BezierPath : MonoBehaviour
             if (verticles[EndingPoints[1]].x + transform.position.x < LewyKraniec() || verticles[EndingPoints[0]].x + transform.position.x > PrawyKraniec())
                 return;
             else
+            {
                 UpdateShadows();
+                return;
+            }
         }
     }
     private void Update()
@@ -140,10 +184,21 @@ public class BezierPath : MonoBehaviour
         ShadowMesh = new Mesh();
         ShadowMesh.vertices = verticles;
         ShadowMesh.triangles = triangles;
-        GetComponent<MeshFilter>().mesh = ShadowMesh;
+        if (ShadowGameObject != null)
+        {
+            ShadowGameObject.GetComponent<MeshFilter>().mesh = ShadowMesh;
+            ShadowGameObject.GetComponent<MeshRenderer>().material = ShadowMaterial;
+        }
+        else
+            GetComponent<MeshFilter>().mesh = ShadowMesh;
     }
     private void Start()
     {
         GenerateMesh();
+    }
+    private void OnDestroy()
+    {
+        if (ShadowGameObject != null)
+            Destroy(ShadowGameObject);
     }
 }

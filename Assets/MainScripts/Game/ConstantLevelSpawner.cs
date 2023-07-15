@@ -9,10 +9,13 @@ namespace GameScene
 
         public GameObject AntiBack;
 
-        public List<GameObject> StartSegments = new List<GameObject>();
-        public List<GameObject> NormalSegments = new List<GameObject>();
+        public bool TestSegment = false;
+        public int TestSegmentIndex = 0;
 
-        private GameObject PreviousSegment = null;
+        public List<GameObject> StartSegments = new List<GameObject>();
+        public float[] test = new float[2];
+        public List<GameObject> NormalSegments = new List<GameObject>();
+        private List<GameObject>[] ClassifiedNormalSegments = new List<GameObject>[5];
 
         private Vector2 EndingPoint;
         private readonly float SpawnRange = 20f;
@@ -33,19 +36,78 @@ namespace GameScene
             EndingPoint = ga.GetComponent<SegmentsConnecter>().Stop + (Vector2)ga.transform.position;
             AntiBack.transform.position = new Vector3(-20, 0, 0);
         }
+        #region Previous
+        private GameObject[] PreviousSegment = null;
+        public int PreviousSegmentCount = 5;
+        bool WasSegmentPrevious(GameObject seg)
+        {
+            foreach (GameObject ga in PreviousSegment)
+                if (ga == seg) return true;
+            return false;
+        }
+        void PushPreviousSegment(GameObject seg)
+        {
+            //Offset
+            for (int i = PreviousSegmentCount - 1; i > 0; i--)
+            {
+                PreviousSegment[i] = PreviousSegment[i - 1];
+            }
+                
+            PreviousSegment[0] = seg;
+        }
+        void SetPrevoiusSegmentCount()
+        {
+            PreviousSegment = new GameObject[PreviousSegmentCount];
+        }
+        int GenerateDifficulty()
+        {
+            /*
+             *   LEVEL  DIFFICULTY 
+             *  ~ 0-5   ==> 1
+             *  ~ 6-10  ==> 2
+             *  ~ 11-20 ==> 3
+             *  ~ 21-30 ==> 4
+             *  ~ 31-40 ==> 5
+             *  
+             *  + 10% Chance to spawn higher difficulty
+             */
+            int MaxDif = 1;
+            int CurrentLevel = GameInfo.Instance.ConstantModePoints;
+            if (CurrentLevel >= 6 && CurrentLevel <= 10)
+                MaxDif = 2;
+            else if (CurrentLevel >= 11 && CurrentLevel <= 20)
+                MaxDif = 3;
+            else if (CurrentLevel >= 21 && CurrentLevel <= 30)
+                MaxDif = 4;
+            else if (CurrentLevel >= 31 && CurrentLevel <= 40)
+                MaxDif = 5;
+            int Result = Random.Range(1,MaxDif);
+            if (Result < 5 && Random.Range(1, 100) <= 10)
+                Result++;
+            return Result-1;
+        }
+        #endregion Previous
         void CheckForUpdate()
         {
             while (GameJelly.Instance.transform.position.x + SpawnRange > EndingPoint.x)
             {
                 //Spawn 
-                GameObject segment = NormalSegments[0] ;
-                for(int i=0;i<20;i++)
+                GameObject segment = NormalSegments[0];
+                if (TestSegment)
                 {
-                    segment = NormalSegments[Random.Range(0, NormalSegments.Count)];
-                    if (segment.GetComponent<SegmentsConnecter>().Start.y == EndingPoint.y&&segment!=PreviousSegment)
-                        break;
+                    segment = NormalSegments[TestSegmentIndex];
                 }
-                PreviousSegment = segment;
+                else for (int i = 0; i < 30; i++)
+                    {
+                        int Dif;
+                        do
+                            Dif = GenerateDifficulty();
+                        while (ClassifiedNormalSegments[Dif].Count == 0);
+                        segment = ClassifiedNormalSegments[Dif][Random.Range(0, ClassifiedNormalSegments[Dif].Count)];
+                        if (segment.GetComponent<SegmentsConnecter>().Start.y == EndingPoint.y && !WasSegmentPrevious(segment))
+                            break;
+                    }
+                PushPreviousSegment(segment);
                 GameObject ga = Instantiate(segment);
                 ga.transform.position = new Vector3(EndingPoint.x - segment.GetComponent<SegmentsConnecter>().Start.x, ga.transform.position.y,ga.transform.position.z);
                 EndingPoint = ga.GetComponent<SegmentsConnecter>().Stop + (Vector2)ga.transform.position;
@@ -62,12 +124,22 @@ namespace GameScene
 
         void Start()
         {
+            SetPrevoiusSegmentCount();
             SetStartSegment();
         }
         private void Awake()
         {
             if (Instance == null)
+            {
                 Instance = this;
+                //Setup
+                for(int i=0;i<5;i++)
+                    ClassifiedNormalSegments[i] = new List<GameObject>();
+                foreach (GameObject ga in NormalSegments)
+                {
+                    ClassifiedNormalSegments[ga.GetComponent<SegmentsConnecter>().Difficulty-1].Add(ga);
+                }
+            }
             else Destroy(gameObject);
         }
         // Update is called once per frame

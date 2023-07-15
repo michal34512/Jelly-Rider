@@ -9,8 +9,9 @@ namespace Effects
         public void DimmerStart(System.Action Action)
         {
             DontDestroyOnLoad(gameObject);
-            
-            gameObject.transform.localScale = new Vector3(Screen.width, Screen.width, 1f);
+            var height = 2 * Camera.main.orthographicSize;
+            var width = height * Camera.main.aspect;
+            gameObject.transform.localScale = new Vector3(101 * width, 101 * height, 1f);
             LeanTween.value(gameObject, 0f, 1f, 0.2f).setOnUpdate((float val) =>
             {
                 GetComponent<SpriteRenderer>().color = new Color(GetComponent<SpriteRenderer>().color.r, GetComponent<SpriteRenderer>().color.g, GetComponent<SpriteRenderer>().color.b,val);

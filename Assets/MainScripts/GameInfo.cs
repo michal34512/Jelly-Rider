@@ -12,11 +12,15 @@ public class GameInfo : MonoBehaviour
     {
         UI,
         Level,
-        Constant
+        Constant,
+        Tutorial
     }
     public _GameMode gamemode = _GameMode.UI;
 
-    public float ConstantModePoints = 0f;
+    public int ConstantModePoints = 0;
+
+    #region Backgrounds
+
 
     public List<Sprite> Backgrounds_Sprites;
     private Sprite Choosed_Background;
@@ -41,30 +45,67 @@ public class GameInfo : MonoBehaviour
     {
         Color JellyColor = Jellys[PickedJelly].MainColor;
         Sprite BackgroundSprite = null;
-        for (int i = 0; i < Backgrounds_Sprites.Count*10; i++) // zabezpiecznie
+        for (int i = 0; i < Backgrounds_Sprites.Count * 10; i++) // zabezpiecznie
         {
             BackgroundSprite = Backgrounds_Sprites[Random.Range(0, Backgrounds_Sprites.Count)];
             Color BackgroundColor = Average_Color(BackgroundSprite);
             if (Mathf.Abs(JellyColor.r - BackgroundColor.r) + Mathf.Abs(JellyColor.g - BackgroundColor.g) + Mathf.Abs(JellyColor.b - BackgroundColor.b) > MinColorDifferenceFactor)
             {
-                if(BackgroundSprite != Choosed_Background)
+                if (BackgroundSprite != Choosed_Background)
                 {
+                    Change_Spikes_Color(BackgroundColor);
                     break;
                 }
-                    
             }
+            if(i == (Backgrounds_Sprites.Count * 10)-1) Change_Spikes_Color(BackgroundColor);
         }
-        
-        foreach(Background_Controller bc in FindObjectsOfType<Background_Controller>())
+        foreach (Background_Controller bc in FindObjectsOfType<Background_Controller>())
         {
             bc.Update_Background(BackgroundSprite);
         }
         Choosed_Background = BackgroundSprite;
     }
-    public void Assign_Background(Image A)
+    public Sprite Get_Background()
     {
-        A.sprite = Choosed_Background;
+        return Choosed_Background;
     }
+
+    public Material SpikeMaterial;
+    [HideInInspector] public bool SpikesRedYellow = true;
+    //255 49 49
+    //255 186 95
+
+    //247 255 143
+    //255 180 0
+    private readonly Color[,] SpikesColors = { { new Color(1f, 0.1922f, 0.1922f), new Color(1f, 0.73f, 0.373f) }, { new Color(0.97f, 1f, 0.56f), new Color(1f, 0.706f, 0f) } };
+    private void Change_Spikes_Color(Color BackgroundColor)
+    {
+        //Debug.Log("SETTING");
+        Color SpikeColorA = SpikeMaterial.GetColor("ColorA");
+        Color SpikeColorB = SpikeMaterial.GetColor("ColorB");
+        float Factor = Mathf.Max((Mathf.Abs(SpikeColorA.r - BackgroundColor.r) + Mathf.Abs(SpikeColorA.g - BackgroundColor.g) + Mathf.Abs(SpikeColorA.b - BackgroundColor.b)), (Mathf.Abs(SpikeColorB.r - BackgroundColor.r) + Mathf.Abs(SpikeColorB.g - BackgroundColor.g) + Mathf.Abs(SpikeColorB.b - BackgroundColor.b)));
+        if (Factor > 0.65)
+        {
+            //RED
+            LeanTween.cancel(gameObject);
+            LeanTween.value(gameObject, 0f, 1f, 0.4f).setOnUpdate((float val) =>
+               {
+                   SpikeMaterial.SetColor("ColorA", (SpikesColors[0, 0] - SpikeColorA)*val + SpikeColorA);
+                   SpikeMaterial.SetColor("ColorB", (SpikesColors[0, 1] - SpikeColorB) * val + SpikeColorB);
+               });
+        }
+        else
+        {
+            //Yellow
+            LeanTween.cancel(gameObject);
+            LeanTween.value(gameObject, 0f, 1f, 0.4f).setOnUpdate((float val) =>
+            {
+                SpikeMaterial.SetColor("ColorA", (SpikesColors[1, 0] - SpikeColorA) * val + SpikeColorA);
+                SpikeMaterial.SetColor("ColorB", (SpikesColors[1, 1] - SpikeColorB) * val + SpikeColorB);
+            });
+        }
+    }
+    #endregion Backgrounds
 
     public List<Jelly_Scriptable_Object> Jellys;
     private int _PickedJelly;
@@ -76,8 +117,31 @@ public class GameInfo : MonoBehaviour
         }
         set
         {
-            PlayerPrefs.SetInt("PickedJelly", value);
-            _PickedJelly = value;
+            if(value < 0)
+            {
+                PlayerPrefs.SetInt("PickedJelly", 0);
+                _PickedJelly = 0;
+            }
+            else if(value >= Jellys.Count)
+            {
+                PlayerPrefs.SetInt("PickedJelly", Jellys.Count - 1);
+                _PickedJelly = Jellys.Count - 1;
+            }
+            else
+            {
+                PlayerPrefs.SetInt("PickedJelly", value);
+                _PickedJelly = value;
+            }
+
+            int x = (int)Jellys[value].RarityClass;
+            for (int i = 0; i < Classes[x].Count; i++)
+            {
+                if (Classes[x][i] == Jellys[value])
+                {
+                    ClassesPickedJelly = new Vector2Int(x, i);
+                    break;
+                }
+            }
         }
     }
     public Jelly_Scriptable_Object PickedJellyObject
@@ -88,30 +152,7 @@ public class GameInfo : MonoBehaviour
         }
     }
 
-    /*public List<Jelly_Eye_Scriptable_Object> Eyes;
-    private int _PickedEyes;
-    public int PickedEyes
-    {
-        get
-        {
-            return _PickedEyes;
-        }
-        set
-        {
-            if(value>=0&&value<Eyes.Count)
-            {
-                PlayerPrefs.SetInt("PickedEyes", value);
-                _PickedEyes = value;
-            }
-        }
-    }
-    public Jelly_Eye_Scriptable_Object PickedEyesObject
-    {
-        get
-        {
-            return Eyes[PickedEyes];
-        }
-    }*/
+
 
     private int _LoadedLevel;
     public int LoadedLevel 
@@ -141,39 +182,116 @@ public class GameInfo : MonoBehaviour
             _PlayerMoney = value;
         }
     }
+    #region JellyClasses
+    public List<Jelly_Scriptable_Object> [] Classes = new List<Jelly_Scriptable_Object>[5]; // Default, Common, Rare, Epic, Legendary
+    private void SetJellyClasses()
+    {
+        for (int i = 0; i < Classes.Length; i++)
+            Classes[i] = new List<Jelly_Scriptable_Object>();
+        foreach(Jelly_Scriptable_Object jso in Jellys)
+        {
+            Classes[(int)jso.RarityClass].Add(jso);
+        }
+    }
+    public Vector2Int ClassesPickedJelly;
+    public int GetJellyIndexByClassPos(Vector2Int pos)
+    {
+        if (pos.y < 0)
+        {
+            pos.y = 0;
+        }
+        else if (pos.y >= Classes[pos.x].Count)
+        {
+            pos.y = Classes[pos.x].Count - 1;
+        }
+        for (int i = 0; i < Jellys.Count; i++)
+        {
+            if (Jellys[i] == Classes[pos.x][pos.y])
+                return i;
+        }
+        return 0;
+    }
+    #endregion JellyClasses
+    public void UpdateLockedJellys()
+    {
+        for (int i = 0; i < Jellys.Count; i++)
+        {
+            if (PlayerPrefs.GetInt("JellyUnlocked" + i.ToString()) == 1 || Jellys[i].RarityClass == Jelly_Scriptable_Object._RarityClass.Default)
+                Jellys[i].Unlocked = true;
+            else Jellys[i].Unlocked = false;
+        }
+    }
 
+    #region GameMusic
+    public bool isMuted
+    {
+        get
+        {
+            return _isMuted;
+        }
+        private set
+        {
+            _isMuted = value;
+            GetComponent<AudioSource>().enabled = !_isMuted;
+            PlayerPrefs.SetInt("MusicMuted",value ? 1 : 0);
+        }
+    }
+    private bool _isMuted = false;
+    public void Chance_Mute_State()
+    {
+        isMuted = !isMuted;
+    }
+    #endregion GameMusic
     private void Start()
     {
         Next_Background();
-        /*Color JellyColor = Jellys[PickedJelly].MainColor;
-        Sprite BackgroundSprite = Backgrounds_Sprites[12];
-        Color BackgroundColor = Average_Color(BackgroundSprite);
-        Debug.Log(BackgroundSprite.name+" _ "+(Mathf.Abs(JellyColor.r - BackgroundColor.r) + Mathf.Abs(JellyColor.g - BackgroundColor.g) + Mathf.Abs(JellyColor.b - BackgroundColor.b)));
-        */
     }
     private void Awake()
     {
         if (Instance == null)
         {
-            QualitySettings.vSyncCount = 1;
+            //QualitySettings.vSyncCount = 2;
             Application.targetFrameRate = 60;
-
+            //Time.captureFramerate = 30;
             Instance = this;
             DontDestroyOnLoad(gameObject);
             _PickedJelly = PlayerPrefs.GetInt("PickedJelly");
-            
-            if(!long.TryParse(PlayerPrefs.GetString("PlayerMoney"), out _PlayerMoney))
+            if (!Jellys[PickedJelly].Unlocked)
+                _PickedJelly = 0; // Default
+            if (!long.TryParse(PlayerPrefs.GetString("PlayerMoney"), out _PlayerMoney))
                 Debug.LogWarning("Player money reading error");
-
-            //PickedEyes = PlayerPrefs.GetInt("PickedEyes");
+            //PlayerMoney += 100;
+            //Locking Jelly
+            UpdateLockedJellys();
+            //Unlock All Jellys
+                for (int i = 0; i < Jellys.Count; i++)
+                {
+                    PlayerPrefs.SetInt("JellyUnlocked" + i.ToString(), 1);
+                }
             //First Run
             if (PlayerPrefs.GetInt("FirstRun") != 1)
             {
                 PlayerPrefs.SetInt("FirstRun", 1);
+                PlayerPrefs.SetFloat("MusicVolume", GetComponent<AudioSource>().volume);
                 PickedJelly = 0;
                 PlayerMoney = 0;
-                //PickedEyes = 0;
             }
+            SetJellyClasses();
+            int x = (int)Jellys[PickedJelly].RarityClass;
+            for (int i = 0; i < Classes[x].Count; i++)
+            {
+                if (Classes[x][i] == Jellys[PickedJelly])
+                {
+                    ClassesPickedJelly = new Vector2Int(x, i);
+                    break;
+                }
+            }
+            //Music
+            if(PlayerPrefs.GetInt("MusicMuted") == 1)
+            {
+                isMuted = true;
+            }
+            GetComponent<AudioSource>().volume = PlayerPrefs.GetFloat("MusicVolume");
         }
         else Destroy(gameObject);
     }

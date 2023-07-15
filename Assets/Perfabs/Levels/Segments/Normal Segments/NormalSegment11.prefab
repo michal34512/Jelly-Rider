@@ -66,6 +66,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Start: {x: -20, y: 0}
   Stop: {x: 25, y: 0}
+  Difficulty: 3
 --- !u!1001 &214328773746087289
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -81,7 +82,7 @@ PrefabInstance:
     - target: {fileID: 5299034769225689385, guid: de23651cddcd9b34c91892e3e3187ae8,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.35
+      value: 2.35
       objectReference: {fileID: 0}
     - target: {fileID: 5299034769225689385, guid: de23651cddcd9b34c91892e3e3187ae8,
         type: 3}
@@ -128,6 +129,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 215.71
       objectReference: {fileID: 0}
+    - target: {fileID: 5299034769225689388, guid: de23651cddcd9b34c91892e3e3187ae8,
+        type: 3}
+      propertyPath: verticles.Array.data[0].x
+      value: 0.5000057
+      objectReference: {fileID: 0}
+    - target: {fileID: 5299034769225689388, guid: de23651cddcd9b34c91892e3e3187ae8,
+        type: 3}
+      propertyPath: verticles.Array.data[1].x
+      value: -0.50000286
+      objectReference: {fileID: 0}
+    - target: {fileID: 5299034769225689388, guid: de23651cddcd9b34c91892e3e3187ae8,
+        type: 3}
+      propertyPath: verticles.Array.data[2].y
+      value: 1.000001
+      objectReference: {fileID: 0}
     - target: {fileID: 5299034769225689389, guid: de23651cddcd9b34c91892e3e3187ae8,
         type: 3}
       propertyPath: m_Name
@@ -161,7 +177,7 @@ PrefabInstance:
     - target: {fileID: 5299034769225689385, guid: de23651cddcd9b34c91892e3e3187ae8,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.79
+      value: 2.79
       objectReference: {fileID: 0}
     - target: {fileID: 5299034769225689385, guid: de23651cddcd9b34c91892e3e3187ae8,
         type: 3}
@@ -217,6 +233,11 @@ PrefabInstance:
         type: 3}
       propertyPath: verticles.Array.data[2].y
       value: 1.0000005
+      objectReference: {fileID: 0}
+    - target: {fileID: 5299034769225689388, guid: de23651cddcd9b34c91892e3e3187ae8,
+        type: 3}
+      propertyPath: verticles.Array.data[1].x
+      value: -0.50000286
       objectReference: {fileID: 0}
     - target: {fileID: 5299034769225689389, guid: de23651cddcd9b34c91892e3e3187ae8,
         type: 3}
@@ -2406,7 +2427,7 @@ PrefabInstance:
     - target: {fileID: 2500108945308179852, guid: d55383a87200361469b32d7a65906043,
         type: 3}
       propertyPath: handlerSecondPoint.y
-      value: 2
+      value: 1.999999
       objectReference: {fileID: 0}
     - target: {fileID: 2500108945308179852, guid: d55383a87200361469b32d7a65906043,
         type: 3}
@@ -2416,7 +2437,7 @@ PrefabInstance:
     - target: {fileID: 2500108945308179852, guid: d55383a87200361469b32d7a65906043,
         type: 3}
       propertyPath: secondPoint.y
-      value: 1
+      value: 0.99999964
       objectReference: {fileID: 0}
     - target: {fileID: 2500108945308179852, guid: d55383a87200361469b32d7a65906043,
         type: 3}
@@ -2676,7 +2697,7 @@ PrefabInstance:
     - target: {fileID: 2500108945308179852, guid: d55383a87200361469b32d7a65906043,
         type: 3}
       propertyPath: handlerFirstPoint.y
-      value: 2
+      value: 1.999999
       objectReference: {fileID: 0}
     - target: {fileID: 2500108945308179852, guid: d55383a87200361469b32d7a65906043,
         type: 3}
@@ -2686,7 +2707,7 @@ PrefabInstance:
     - target: {fileID: 2500108945308179852, guid: d55383a87200361469b32d7a65906043,
         type: 3}
       propertyPath: firstPoint.y
-      value: 1
+      value: 0.99999964
       objectReference: {fileID: 0}
     - target: {fileID: 2500108945308179852, guid: d55383a87200361469b32d7a65906043,
         type: 3}
@@ -4386,7 +4407,7 @@ PrefabInstance:
     - target: {fileID: 2500108945308179959, guid: d55383a87200361469b32d7a65906043,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2500108945308179959, guid: d55383a87200361469b32d7a65906043,
         type: 3}
@@ -7273,6 +7294,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5897461569672166639}
     m_Modifications:
+    - target: {fileID: 2329891918912735115, guid: 853ee62a33e6bba4687dc6a58c35adc1,
+        type: 3}
+      propertyPath: PlatformForce
+      value: 0.6
+      objectReference: {fileID: 0}
     - target: {fileID: 3511746047392478755, guid: 853ee62a33e6bba4687dc6a58c35adc1,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -9746,7 +9772,7 @@ PrefabInstance:
     - target: {fileID: 5299034769225689385, guid: de23651cddcd9b34c91892e3e3187ae8,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.33
+      value: 2.33
       objectReference: {fileID: 0}
     - target: {fileID: 5299034769225689385, guid: de23651cddcd9b34c91892e3e3187ae8,
         type: 3}
@@ -9796,12 +9822,17 @@ PrefabInstance:
     - target: {fileID: 5299034769225689388, guid: de23651cddcd9b34c91892e3e3187ae8,
         type: 3}
       propertyPath: verticles.Array.data[2].y
-      value: 1.0000008
+      value: 1.000001
       objectReference: {fileID: 0}
     - target: {fileID: 5299034769225689388, guid: de23651cddcd9b34c91892e3e3187ae8,
         type: 3}
       propertyPath: verticles.Array.data[0].x
       value: 0.5000038
+      objectReference: {fileID: 0}
+    - target: {fileID: 5299034769225689388, guid: de23651cddcd9b34c91892e3e3187ae8,
+        type: 3}
+      propertyPath: verticles.Array.data[1].x
+      value: -0.5000019
       objectReference: {fileID: 0}
     - target: {fileID: 5299034769225689389, guid: de23651cddcd9b34c91892e3e3187ae8,
         type: 3}

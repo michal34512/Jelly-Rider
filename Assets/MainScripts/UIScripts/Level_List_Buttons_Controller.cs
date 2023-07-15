@@ -37,12 +37,12 @@ namespace UIScene
             public int Index = 0;
             public System.Action<int> Action;
 
-            private Image LevelCompletedImage;
+            //private Image LevelCompletedImage;
             public void Set_Up(Sprite LevelCompletedSprite)
             {
                 gameObject.GetComponent<Button>().onClick.AddListener(()=> { Action?.Invoke(Index); });
                 gameObject.GetComponentInChildren<TextMeshProUGUI>().text = Index.ToString();
-                if(PlayerPrefs.GetInt("LevelCompleted"+Index.ToString()) == 1)
+                /*if(PlayerPrefs.GetInt("LevelStars" + Index.ToString()) == 3)
                 {
                     GameObject ga = new GameObject("LevelCompleted");
                     ga.transform.parent = gameObject.transform;
@@ -53,13 +53,24 @@ namespace UIScene
                     LevelCompletedImage.sprite = LevelCompletedSprite;
                     LevelCompletedImage.SetNativeSize();
                     UpdateColor();
+                }*/
+                if(PlayerPrefs.GetInt("LevelStars" + Index.ToString()) > 0) //Changing number color
+                {
+                    if (GetComponentInChildren<TextMeshProUGUI>() != null)
+                        GetComponentInChildren<TextMeshProUGUI>().color = GameInfo.Instance.Game_Color;
+                }else
+                {
+                    if (GetComponentInChildren<TextMeshProUGUI>() != null)
+                        GetComponentInChildren<TextMeshProUGUI>().color = new Color(0.23f, 0.23f, 0.23f, 1f);
                 }
+                if (GetComponentInChildren<Level_List_Stars_Controller>() != null)
+                    GetComponentInChildren<Level_List_Stars_Controller>().UpdateStars(Index);
             }
-            public void UpdateColor()
+            /*public void UpdateColor()
             {
                 if (LevelCompletedImage != null)
                     LevelCompletedImage.color = GameInfo.Instance.Game_Color;
-            }
+            }*/
         }
 
         #region ButtonsScripts
@@ -72,16 +83,18 @@ namespace UIScene
                 GameInfo.Instance.gamemode = GameInfo._GameMode.Level;
                 SceneManager.LoadScene(1);
                 GameInfo.Instance.LoadedLevel = _index;
-                SceneManager.LoadSceneAsync(2 + _index, LoadSceneMode.Additive);
+                SceneManager.LoadSceneAsync(3 + _index, LoadSceneMode.Additive);
                 //SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
             });
         }
         public void Button_Arrow_Left()
         {
+            MenuCardsController.Instance.Sound_Play_LightClick();
             List_Page--;
         }
         public void Button_Arrow_Right()
         {
+            MenuCardsController.Instance.Sound_Play_LightClick();
             List_Page++;
         }
         #endregion ButtonsScripts
@@ -134,7 +147,20 @@ namespace UIScene
                 }
             }
         }
+        private void Set_Up_Scale()
+        {
+            float ScaleA = 1.7777f;
+            float ScaleB = (float)Screen.width/(float)Screen.height;
+            float RezultScale = Mathf.Min(ScaleB / ScaleA,1f);
+            GetComponent<RectTransform>().localScale = new Vector3(RezultScale, RezultScale, 1);
+        }
         private void Start()
+        {
+            Assign_Buttons();
+            Set_Up_Dots();
+            Set_Up_Scale();
+        }
+        private void OnEnable()
         {
             Assign_Buttons();
             Set_Up_Dots();

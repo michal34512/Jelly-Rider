@@ -93,7 +93,7 @@ public class BezierPathEditor : Editor
             Vector2 Direction = (PointPosition  - FixedLight).normalized;
             return FixedLight + Direction * (ScreenBottom - FixedLight.y) / Direction.y;
         }*/
-
+        
         List<Vector2> Vertexes = new List<Vector2>();
         Vertexes.AddRange(polygonCollider.points);
         //Points to bottom
@@ -139,13 +139,13 @@ public class BezierPathEditor : Editor
         _SObezierCollider.ApplyModifiedProperties();
 
 
-        Vector3 Conventer(Vector2 A) { return new Vector3(A.x, A.y, 0.1f); }
+        //Vector3 Conventer(Vector2 A) { return new Vector3(A.x, A.y, 0.1f); }
 
-        Mesh _mesh = new Mesh();
+        /*Mesh _mesh = new Mesh();
         _mesh.vertices = Array.ConvertAll(Vertexes.ToArray(), Conventer);
         _mesh.triangles = Triangles.ToArray();
         _mesh.uv = Vertexes.ToArray();
-        bezierCollider.GetComponent<MeshFilter>().sharedMesh = _mesh;
+        bezierCollider.GetComponent<MeshFilter>().sharedMesh = _mesh;*/
     }
     public override void OnInspectorGUI()
     {
@@ -161,12 +161,19 @@ public class BezierPathEditor : Editor
 
         if (polygonCollider != null)
         {
+            bezierCollider.DynamicShadow = EditorGUILayout.Toggle("is Dynamic", bezierCollider.DynamicShadow, GUILayout.MinWidth(100));
             bezierCollider.pointsQuantity = EditorGUILayout.IntField("curve points", bezierCollider.pointsQuantity, GUILayout.MinWidth(100));
             bezierCollider.ColliderOffset = EditorGUILayout.FloatField("collider offset", bezierCollider.ColliderOffset, GUILayout.MinWidth(100));
             bezierCollider.firstPoint = EditorGUILayout.Vector2Field("first point", bezierCollider.firstPoint, GUILayout.MinWidth(100));
             bezierCollider.handlerFirstPoint = EditorGUILayout.Vector2Field("handler first Point", bezierCollider.handlerFirstPoint, GUILayout.MinWidth(100));
             bezierCollider.secondPoint = EditorGUILayout.Vector2Field("second point", bezierCollider.secondPoint, GUILayout.MinWidth(100));
             bezierCollider.handlerSecondPoint = EditorGUILayout.Vector2Field("handler secondPoint", bezierCollider.handlerSecondPoint, GUILayout.MinWidth(100));
+            bezierCollider.ShadowMaterial = (Material)EditorGUILayout.ObjectField("Shadow Material", bezierCollider.ShadowMaterial, typeof(Material), true, GUILayout.MinWidth(100));
+
+            if (!bezierCollider.gameObject.isStatic)
+                bezierCollider.DynamicShadow = true;
+            else bezierCollider.DynamicShadow = false;
+
             if (GUILayout.Button("Update Perfab"))
             {
                 if (PrefabUtility.IsPartOfPrefabInstance(bezierCollider.gameObject))
@@ -180,14 +187,21 @@ public class BezierPathEditor : Editor
                 bezierCollider.firstPoint.x = Mathf.RoundToInt(bezierCollider.firstPoint.x);
                 bezierCollider.firstPoint.y = Mathf.RoundToInt(bezierCollider.firstPoint.y);
 
-                bezierCollider.handlerFirstPoint.x = Mathf.RoundToInt(bezierCollider.handlerFirstPoint.x);
-                bezierCollider.handlerFirstPoint.y = Mathf.RoundToInt(bezierCollider.handlerFirstPoint.y);
-
                 bezierCollider.secondPoint.x = Mathf.RoundToInt(bezierCollider.secondPoint.x);
                 bezierCollider.secondPoint.y = Mathf.RoundToInt(bezierCollider.secondPoint.y);
 
-                bezierCollider.handlerSecondPoint.x = Mathf.RoundToInt(bezierCollider.handlerSecondPoint.x);
-                bezierCollider.handlerSecondPoint.y = Mathf.RoundToInt(bezierCollider.handlerSecondPoint.y);
+                if(bezierCollider.pointsQuantity==1)
+                {
+                    bezierCollider.handlerFirstPoint = bezierCollider.firstPoint;
+                    bezierCollider.handlerSecondPoint = bezierCollider.secondPoint;
+                }
+                else
+                {
+                    bezierCollider.handlerFirstPoint.x = Mathf.RoundToInt(bezierCollider.handlerFirstPoint.x);
+                    bezierCollider.handlerFirstPoint.y = Mathf.RoundToInt(bezierCollider.handlerFirstPoint.y);
+                    bezierCollider.handlerSecondPoint.x = Mathf.RoundToInt(bezierCollider.handlerSecondPoint.x);
+                    bezierCollider.handlerSecondPoint.y = Mathf.RoundToInt(bezierCollider.handlerSecondPoint.y);
+                }
             }
             if (bezierCollider.pointsQuantity > 0 && !bezierCollider.firstPoint.Equals(bezierCollider.secondPoint) &&
                 (
@@ -247,4 +261,5 @@ public class BezierPathEditor : Editor
             }
         }
     }
+    
 }

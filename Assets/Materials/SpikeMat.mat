@@ -39,8 +39,8 @@ Material:
     m_Floats:
     - _EnableExternalAlpha: 0
     m_Colors:
-    - ColorA: {r: 1, g: 0.19339621, b: 0.19339621, a: 1}
-    - ColorB: {r: 1, g: 0.72837245, b: 0.37254906, a: 1}
+    - ColorA: {r: 1, g: 0.1922, b: 0.1922, a: 1}
+    - ColorB: {r: 1, g: 0.73, b: 0.373, a: 1}
     - Color_18B2E9C4: {r: 1, g: 0.2783019, b: 0.2783019, a: 1}
     - Color_3702E976: {r: 1, g: 0.5235849, b: 0.5235849, a: 1}
     - Glowing: {r: 0.9999999, g: 0, b: 0, a: 0}

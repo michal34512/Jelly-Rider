@@ -8,12 +8,14 @@ namespace GameScene
     {
         private readonly float ToSize = 3f;
         private float SavedYPos = 0;
+        public float PlatformForce = 1;
         private void OnTriggerEnter2D(Collider2D collision)
         {
             if (collision.gameObject.layer == 8 && !LeanTween.isTweening(gameObject)) //Jelly&Wheels
             {
                 SavedYPos = transform.localPosition.y;
-                GameJelly.Instance.HitJumpPlatform(transform.up);
+                GameJelly.Instance.HitJumpPlatform(transform.up,PlatformForce);
+                InGameUIController.Instance.Sound_Jumping_Platform();
                 LeanTween.value(gameObject, 1f, ToSize, 0.05f).setOnUpdate((float val) =>
                    {
                        transform.localScale = new Vector3(transform.localScale.x, val, transform.localScale.z);

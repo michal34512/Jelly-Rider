@@ -45,6 +45,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Game_Color: {r: 0.23529412, g: 0.23529412, b: 0.23529412, a: 0}
+  gamemode: 0
+  ConstantModePoints: 0
   Backgrounds_Sprites:
   - {fileID: 21300000, guid: c09bc157283555f4fa0677b86bc2b33d, type: 3}
   - {fileID: 21300000, guid: d47d55c9ed26c8345b897ba6d574eb8b, type: 3}
@@ -60,6 +62,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: b5cc5c65e7df3ca4b9033ce87159b47f, type: 3}
   - {fileID: 21300000, guid: 96df7e34acd16bf49963210dd7970b19, type: 3}
   - {fileID: 21300000, guid: 482acb58b43e9974bb6ae2c8006e7433, type: 3}
+  SpikeMaterial: {fileID: 2100000, guid: 5aab95c29c97c1f42b29ba1b6153e90e, type: 2}
   Jellys:
   - {fileID: 11400000, guid: 38c178bf97f83e4469736ae4e3189f36, type: 2}
   - {fileID: 11400000, guid: ce81e43b97e641d46a9e13aa6ce93ad4, type: 2}
@@ -67,13 +70,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d2f0fc756c130264e9e443ea4cb9987e, type: 2}
   - {fileID: 11400000, guid: ad62957e612ac794abae0c297c39328a, type: 2}
   - {fileID: 11400000, guid: 9f3a2fa8122ad3142947b623a4220626, type: 2}
-  Eyes:
-  - {fileID: 11400000, guid: 6a9889751b5cd8f48a8672c00b6f4b81, type: 2}
-  - {fileID: 11400000, guid: 257c33b63e37fbc49a3eb6e8edffa5e6, type: 2}
-  - {fileID: 11400000, guid: 78de4b53e5ed06f4e927bf450d748ad9, type: 2}
-  - {fileID: 11400000, guid: ebc2df5c324e6ff4b8e85f6f91e9a7c4, type: 2}
-  - {fileID: 11400000, guid: 7e30b87229451d848843167c263cf58d, type: 2}
-  - {fileID: 11400000, guid: 2a2fd2e9da92af34f850e864c5b0a052, type: 2}
   isLevelLoaded: 0
 --- !u!114 &5635898980507041312
 MonoBehaviour:

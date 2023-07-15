@@ -9,9 +9,16 @@ namespace GameScene
 
         public Transform target;
         public Vector2 Range;
+        public Vector2 RangeOffset = new Vector2(0,0);
         public float Volume;
 
         public bool ReverseX = false;
+
+        public bool SizeByVelocity = true;
+        private readonly float[] CameraSizes = {5, 8};
+        private readonly float Velocity =  15;
+        private float SizeVelocity = 0f;
+        private float SizeAcceleration = 1f;
 
         private byte FixFirstShadowFrames = 10;
         private bool PositionChanged = false;
@@ -41,17 +48,17 @@ namespace GameScene
             }
             else
             {
-                if (A.x > Range.x * 0.5f)
-                    Point.x = Range.x * 0.5f;
-                else if (A.x < Range.x * -0.5f)
-                    Point.x = -Range.x * 0.5f;
+                if (A.x > Range.x * 0.5f + RangeOffset.x)
+                    Point.x = Range.x * 0.5f + RangeOffset.x;
+                else if (A.x < Range.x * -0.5f + RangeOffset.x)
+                    Point.x = -Range.x * 0.5f + RangeOffset.x;
                 else Point.x = A.x;
             }
 
-            if (A.y > Range.y * 0.5f)
-                Point.y = Range.y * 0.5f;
-            else if (A.y < Range.y * -0.5f)
-                Point.y = -Range.y * 0.5f;
+            if (A.y > Range.y * 0.5f + RangeOffset.y)
+                Point.y = Range.y * 0.5f + RangeOffset.y;
+            else if (A.y < Range.y * -0.5f + RangeOffset.y)
+                Point.y = -Range.y * 0.5f + RangeOffset.y;
             else Point.y = A.y;
 
             return Point;
@@ -67,12 +74,23 @@ namespace GameScene
                 ShadowLight.Instance.isCameraMoved = Difference != Vector2.zero;
             transform.localPosition -= new Vector3(Difference.x , Difference.y, 0f);
         }
+        private void UpdateSizeByVelocity()
+        {
+            if (SizeByVelocity && target.GetComponentInChildren<Rigidbody2D>() != null)
+            {
+                float factor = target.GetComponentInChildren<Rigidbody2D>().velocity.x / Velocity;
+                float _Size = CameraSizes[0] +  Mathf.Abs(factor *(CameraSizes[1] - CameraSizes[0]));
+                SizeVelocity = SizeAcceleration * Time.deltaTime * (_Size - Camera.main.orthographicSize); //velocity per frame
+                Camera.main.orthographicSize = Camera.main.orthographicSize + SizeVelocity;
+            }
+        }
         void UpdateRange()
         {
             Vector2 TPosition = GetTargetPosition();
             Vector2 TargetPoint = GetClosestPoint(TPosition);
             Vector2 Difference = TargetPoint - TPosition;
             FollowPoint(Difference);
+            UpdateSizeByVelocity();
         }
         void Update()
         {

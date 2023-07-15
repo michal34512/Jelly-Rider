@@ -133,6 +133,18 @@ public class CustomShapeEditor : Editor
     SerializedProperty PTriangles;
     SerializedProperty PFixedUv;
 
+    float CircleRadius = 1;
+    int CirclePointsCount = 10;
+
+    int SpikesFrequency = 0;
+    float SpikesOffset = 0;
+    float SpikeAngleOffset = 0;
+    private enum ShapeType
+    {
+        Custom,
+        Circle
+    }
+    private ShapeType _ShapeType;
     private void UpdateMeshInformation()
     {
         Triangulator t = new Triangulator(customshape.verticles.ToArray());
@@ -192,19 +204,51 @@ public class CustomShapeEditor : Editor
             PFixedUv = _SOcustomshape.FindProperty("fixeduv");
         }
         _SOcustomshape.Update();
+        _ShapeType = (ShapeType)EditorGUILayout.EnumPopup("Type", _ShapeType, GUILayout.MinWidth(100));
         if (GUILayout.Button("Update"))
         {
-            Debug.Log("Updated");
             UpdateMeshInformation();
             UpdateEditorMesh();
             GenerateCollider();
             if (PrefabUtility.IsPartOfPrefabInstance(customshape.gameObject))
                 PrefabUtility.ApplyPrefabInstance(customshape.gameObject, InteractionMode.AutomatedAction);
         }
-        EditorGUILayout.PropertyField(PVerticles, true);
-        EditorGUILayout.PropertyField(PFixedUv,true);
+        if(_ShapeType == ShapeType.Custom)
+        {
+            EditorGUILayout.PropertyField(PVerticles, true);
+            EditorGUILayout.PropertyField(PFixedUv,true);
+        }else if(_ShapeType == ShapeType.Circle)
+        {
+            CircleRadius =  EditorGUILayout.FloatField("Radius:", CircleRadius, GUILayout.MinWidth(100));
+            CirclePointsCount = EditorGUILayout.IntField("PointCount:", CirclePointsCount, GUILayout.MinWidth(100));
+            SpikesFrequency = EditorGUILayout.IntField("SpikesFrequency:", SpikesFrequency, GUILayout.MinWidth(100));
+            SpikesOffset = EditorGUILayout.FloatField("SpikesOffset:", SpikesOffset, GUILayout.MinWidth(100));
+            SpikeAngleOffset = EditorGUILayout.FloatField("SpikeAngleOffset:", SpikeAngleOffset, GUILayout.MinWidth(100));
+        }
         if (GUI.changed)
         {
+            if (_ShapeType == ShapeType.Circle)
+            {
+                //Oblicznie kola
+                float InBetweenAngle = Mathf.Deg2Rad * 360f / CirclePointsCount;// Radians
+                PVerticles.arraySize = CirclePointsCount;
+                for (int i = 0; i < CirclePointsCount; i++)
+                {
+                    
+                    float Angle = InBetweenAngle * i; // Radians
+                    Vector2 PointPos;
+                    if((SpikesFrequency > 0&&i==0)||i%SpikesFrequency == 0)
+                    {
+                        //Spike
+                        PointPos = new Vector2(Mathf.Cos(Angle+ SpikeAngleOffset) * (CircleRadius + SpikesOffset), Mathf.Sin(Angle+ SpikeAngleOffset) * (CircleRadius+SpikesOffset));
+                    }
+                    else
+                    {
+                        PointPos = new Vector2(Mathf.Cos(Angle) * CircleRadius, Mathf.Sin(Angle) * CircleRadius);
+                    }
+                    PVerticles.GetArrayElementAtIndex(i).vector2Value = PointPos;
+                }
+            }
             //EditorUtility.SetDirty(target);
             UpdateMeshInformation();
             UpdateEditorMesh();

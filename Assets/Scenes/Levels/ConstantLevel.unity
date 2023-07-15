@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -259,6 +259,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AntiBack: {fileID: 1691421522}
+  TestSegment: 0
+  TestSegmentIndex: 41
   StartSegments:
   - {fileID: 1469923321547989494, guid: 9fc26304d98203145a4a90fa08269d8b, type: 3}
   NormalSegments:
@@ -280,6 +282,39 @@ MonoBehaviour:
   - {fileID: 1024280444817081338, guid: 5b68806ff8e82494d88fde43c12e17af, type: 3}
   - {fileID: 8722264573879523791, guid: 57969be1439b81f488d68dbd34f6a07c, type: 3}
   - {fileID: 7272863497286135656, guid: 34dc033a46aa9ba488f097dbe3285153, type: 3}
+  - {fileID: 5512173352629668523, guid: 50b16866ff3911b4abbaad344433a3f6, type: 3}
+  - {fileID: 8600414234403191627, guid: 4c841c5423ea55843a8a92a8f4ee246e, type: 3}
+  - {fileID: 162806314304540361, guid: ec4d7b98564a1654b899c416cb82819d, type: 3}
+  - {fileID: 6743954171635468265, guid: 3586c9a3b6568dc46819534108f1ad53, type: 3}
+  - {fileID: 5608666493977786826, guid: a7fe4180fe63f344fa2f49072bbd771d, type: 3}
+  - {fileID: 5303513650777953471, guid: 24164c72139a8b2459abf044c141c223, type: 3}
+  - {fileID: 3985886035972639886, guid: c5d40ea0161650245ac2e9d5cebe65e4, type: 3}
+  - {fileID: 5989278815237550597, guid: f438471a0a24213498576f5ce955c659, type: 3}
+  - {fileID: 6987726641060699167, guid: bb13e6166a5444348bbcd777d6c3f9aa, type: 3}
+  - {fileID: 7294979557985786457, guid: 1476a1e4a2b31b646bdee7573917e26b, type: 3}
+  - {fileID: 2997068503539108483, guid: 6ebd2921ab3fd13449ac9b14140961c0, type: 3}
+  - {fileID: 9156816980958687321, guid: 3a13d4b0f8035e749befc63f4b0026a2, type: 3}
+  - {fileID: 4233653442916073965, guid: 20de54e05c18e3544b929d4f3e7b499d, type: 3}
+  - {fileID: 757040321087588677, guid: 8363b12edc8b6df428d47b5b50ed8ec0, type: 3}
+  - {fileID: 5773491774783906972, guid: f66b1df39a018454793d8bb30cb20336, type: 3}
+  - {fileID: 1886668181446056197, guid: 1fcfa2e6166c98748871deb64439693a, type: 3}
+  - {fileID: 855672140343129609, guid: 9d1e6bafcf895a4459fb8a498182c1ce, type: 3}
+  - {fileID: 6587520447049507324, guid: f2449a14be4fed84f9e1cae5cf30b304, type: 3}
+  - {fileID: 8819195847980006481, guid: 09295ade2464f064a83efa1fb908bc52, type: 3}
+  - {fileID: 593100691443947373, guid: 7be69053c42923e4fbbe312dfc3d2ff9, type: 3}
+  - {fileID: 5942442542485195400, guid: 2c4764604c26b194086002b2da92416b, type: 3}
+  - {fileID: 6448414547512145527, guid: b4a2fec224f2cec45944cccf7798e0d1, type: 3}
+  - {fileID: 4643790270985807096, guid: 7f4769195517b674e9b92a2e227c51bb, type: 3}
+  - {fileID: 6146006080959515956, guid: 050950583142f134db2377e539ac1272, type: 3}
+  - {fileID: 428194639977612625, guid: da086c85955f76a43943aa305407cd74, type: 3}
+  - {fileID: 4870342605321483636, guid: 0981a3fa2da763a408f395b832595d1d, type: 3}
+  - {fileID: 4053957564692216815, guid: f51df4ac269c1b14db1cc4761dd18fcf, type: 3}
+  - {fileID: 2580303143842186305, guid: a6e334cf0dabb70449f77ed38ad64d3d, type: 3}
+  - {fileID: 7971095538755724252, guid: a45287007a64dd647862aadcf740e5fa, type: 3}
+  - {fileID: 8644653767392594100, guid: 6291224cdd1185a4e9133926866e2d23, type: 3}
+  - {fileID: 8825541956326191452, guid: 4e402278cd0967744b0670c205a4b5f5, type: 3}
+  - {fileID: 1972219827194548874, guid: e7055cc134808fd43887341cce2a695e, type: 3}
+  - {fileID: 6460426324871734402, guid: 87544920c6a9cb54fac03b397f332930, type: 3}
 --- !u!4 &1841987663
 Transform:
   m_ObjectHideFlags: 0

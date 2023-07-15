@@ -6,10 +6,16 @@ using GameScene;
 public class MoneyController : MonoBehaviour
 {
     readonly float HalfXsize = 0.3f;
-
-    private readonly float AnimationVelocity = 5f; // Units per sec
-    private bool isAnimating = false;
-
+    Transform SavedParent;
+    Vector2 SavedPos;
+    //private readonly float AnimationVelocity = 5f; // Units per sec
+    //private bool isAnimating = false;
+    public void Restart()
+    {
+        gameObject.SetActive(true);
+        if (GetComponentInParent<ParticleSystem>() != null)
+            GetComponentInParent<ParticleSystem>().Play();
+    }
     private void GenerateMesh()
     {
         Vector3 []verticles = {new Vector3(0f, 2*HalfXsize, 0f), new Vector3(HalfXsize, 0f, 0f), new Vector3(0f, -2*HalfXsize, 0f), new Vector3(-HalfXsize, 0, 0f)};
@@ -28,7 +34,6 @@ public class MoneyController : MonoBehaviour
         LeanTween.moveLocalY(gameObject, transform.localPosition.y + 0.6f, 1f).setLoopPingPong();
     }
 
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.gameObject.layer == 8)
@@ -36,6 +41,8 @@ public class MoneyController : MonoBehaviour
             LeanTween.cancel(gameObject);
             if(GetComponentInParent<ParticleSystem>()!=null)
                 GetComponentInParent<ParticleSystem>().Stop(true, ParticleSystemStopBehavior.StopEmitting);
+            SavedParent = transform.parent;
+            SavedPos = transform.position;
             transform.parent = MoneyCounterController.Instance.transform;
             LeanTween.scale(gameObject, new Vector3(0, 0, 1), 0.8f);
             LeanTween.moveLocal(gameObject, transform.InverseTransformPoint(MoneyCounterController.Instance.GetPosition()), 0.5f).setOnComplete(()=> 
@@ -43,7 +50,20 @@ public class MoneyController : MonoBehaviour
                 if(MoneyCounterController.Instance!=null)
                     MoneyCounterController.Instance.AddMoney();
             });
-            LeanTween.delayedCall(1f,() => {Destroy(gameObject); } );
+            LeanTween.delayedCall(1f,() => 
+            {
+                if(this!=null&& GameInfo.Instance!=null&& GameInfo.Instance.gamemode == GameInfo._GameMode.Constant)
+                {
+                    Destroy(gameObject); 
+                }else
+                {
+                    gameObject.SetActive(false);
+                    transform.parent = SavedParent;
+                    transform.localScale = new Vector3(1, 1, 1);
+                    transform.position = new Vector3(SavedPos.x, SavedPos.y,transform.position.z);
+                }
+                    
+            } );
         }
     }
 }

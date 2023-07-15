@@ -17,6 +17,19 @@ namespace GameScene
         private readonly float MaxAngle = 35f;
         private readonly Vector2[] Destinations = { new Vector2(-4f, 5f), new Vector2(-1f, 7f) }; // Opened, Closed
         private readonly float[] MeltedDestinations = { -2.19f, -0.67f }; // Opened, Closed
+
+        //Audio
+        public AudioClip[] Sounds;
+        private enum FormSounds {Open };
+        private void PlaySound(FormSounds _Sound)
+        {
+            switch(_Sound)
+            {
+                case FormSounds.Open:
+                    GetComponent<AudioSource>().PlayOneShot(Sounds[(int)_Sound]);
+                    break;
+            }
+        }
         public void OpenForm()
         {
             //Setting up
@@ -43,6 +56,8 @@ namespace GameScene
                     {
                         MeltedGameObject.SetActive(false);
                         GameJelly.Instance.gameObject.SetActive(true);
+                        if (WinArea.Instance != null) WinArea.Instance.Reset_Game_Time();
+                        PlaySound(FormSounds.Open);
                         LeanTween.value(gameObject, 0f, MaxAngle, 0.4f).setOnUpdate((float val) =>
                         {
                             for (int i = 0; i < 2; i++)

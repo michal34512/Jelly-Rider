@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c536db7b2335106469c93d2145d0cdf7, type: 3}
   m_Name: Default_Red
   m_EditorClassIdentifier: 
+  RarityClass: 0
   MainSprite: {fileID: 21300000, guid: cfc9b66fb02cea746b9fb67fb69f7972, type: 3}
   MainGradnient: {fileID: 21300000, guid: 7de1bf9277c15594eb9c5a28f707bc37, type: 3}
   MainColor: {r: 0.8509804, g: 0.11764706, b: 0.09411765, a: 1}
-  Eyes: {fileID: 11400000, guid: 2a2fd2e9da92af34f850e864c5b0a052, type: 2}
+  Unlocked: 1

@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c536db7b2335106469c93d2145d0cdf7, type: 3}
+  m_Name: Legendary_Pizza
+  m_EditorClassIdentifier: 
+  RarityClass: 4
+  MainSprite: {fileID: 21300000, guid: 390dd9553af99624a8f4cac5dd96ff4b, type: 3}
+  MainGradnient: {fileID: 21300000, guid: 6e11eac0b8821f04a8545d8dcb87d33c, type: 3}
+  MainColor: {r: 1, g: 0.7480532, b: 0.21568626, a: 1}
+  Unlocked: 1

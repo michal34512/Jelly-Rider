@@ -7,6 +7,8 @@ namespace GameScene
     {
         public Vector2 Start;
         public Vector2 Stop;
+        [Range(1, 5)]
+        public int Difficulty = 1;
     }
 }
 

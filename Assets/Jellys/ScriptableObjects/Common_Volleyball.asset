@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c536db7b2335106469c93d2145d0cdf7, type: 3}
+  m_Name: Common_Volleyball
+  m_EditorClassIdentifier: 
+  RarityClass: 1
+  MainSprite: {fileID: 21300000, guid: 60e1a8e41fa824645aea2c6d75a3d6c1, type: 3}
+  MainGradnient: {fileID: 21300000, guid: c4e2248087ecd5e4aac106656781cb65, type: 3}
+  MainColor: {r: 0.8254717, g: 0.9871435, b: 1, a: 1}
+  Unlocked: 1

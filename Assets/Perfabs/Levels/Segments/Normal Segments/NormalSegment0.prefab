@@ -54,6 +54,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Start: {x: -15, y: 0}
   Stop: {x: 48, y: 0}
+  Difficulty: 1
 --- !u!1001 &1604349298240565674
 PrefabInstance:
   m_ObjectHideFlags: 0
